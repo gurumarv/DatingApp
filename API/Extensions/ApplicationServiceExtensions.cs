@@ -24,7 +24,7 @@ namespace API.Extensions
             {
                 options.AddPolicy("DevCors", (corsBuilder) =>
                     {
-                        corsBuilder.WithOrigins("http://localhost/4200", "http://localhost/3000", "http://localhost/8000")
+                        corsBuilder.WithOrigins("http://localhost:4200", "http://localhost:3000", "http://localhost:8000")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();

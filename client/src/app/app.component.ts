@@ -1,28 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {  HttpClient } from '@angular/common/http';
 import { NgFor } from '@angular/common';
-import { ModalModule } from 'ngx-bootstrap/modal';
+import { NavComponent } from "./nav/nav.component";
+import { AccountService } from './_services/account.service';
+import { HomeComponent } from "./home/home.component";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgFor],
+  imports: [RouterOutlet, NgFor, NavComponent, HomeComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  title = 'The Dating App';
-  users: any;
-  constructor(private http: HttpClient){}
+  private accountService = inject(AccountService);
+
 
   ngOnInit() {
-    this.getUsers();
+    this.setCurrentUser();
   }
-  getUsers(){
-    this.http.get('http://localhost:5000/api/users').subscribe(response => {
-      this.users = response;
-    }, error => {
-      console.log(error)
-    })
+
+  setCurrentUser(){
+    const userString = localStorage.getItem('user');
+    if (!userString) return;
+    const user = JSON.parse(userString);
+    this.accountService.currentUser.set(user);
   }
+
 }
