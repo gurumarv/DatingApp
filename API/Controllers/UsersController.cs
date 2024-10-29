@@ -11,27 +11,21 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers
 {
     [Authorize]
-    public class UsersController : BaseApiController
+    public class UsersController(IUserRepository userRepository) : BaseApiController
     {
-        private readonly DataContext _context;
-        public UsersController(DataContext context)
-        {
-            _context = context;
-
-        }
-        
-        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return Ok(await userRepository.GetUsersAsync());
         }
 
         //api/users/3
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AppUser>> GetUser(int id)
+        [HttpGet("{username}")]
+        public async Task<ActionResult<AppUser>> GetUser(string username)
         {
-            return await _context.Users.FindAsync(id);
+            var user = await userRepository.GetUserByUsernameAsync(username);
+            if (user == null) return NotFound();
+            return user;
         }
     }
 }

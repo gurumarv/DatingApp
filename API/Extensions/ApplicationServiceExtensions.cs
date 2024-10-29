@@ -37,6 +37,7 @@ namespace API.Extensions
                         .AllowCredentials();
                     });
             });
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
 
         }
